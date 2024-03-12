@@ -1,28 +1,34 @@
-import os
-
 import ratinabox
 from ratinabox.Environment import Environment
 from ratinabox.Agent import Agent
+
 import pandas as pd 
+import numpy as np
 
+import torch 
+import torch.nn as nn 
+
+path = "../latex/figures/"
 ratinabox.stylize_plots()
-ratinabox.autosave_plots = True
-os.makedirs("../latex/figures", exist_ok=True)
-ratinabox.figure_directory = "../latex/figures/"
+ratinabox.autosave_plots = False
+ratinabox.figure_directory = path 
 
-def simulate():
-    env = Environment()
-    ag = Agent(env)
+def generate_trajectories(batch_size, seq_length):
+    filename = "../data/tensor.pt"
+    data = torch.zeros([2, batch_size, seq_length, 2], dtype=torch.float32)
+    for i in range(batch_size):
+        env = Environment()
+        ag = Agent(env)
 
-    for i in range(int(60 / ag.dt)):
-        ag.update()
-    
-    ag.plot_trajectory()
+        for _ in range(seq_length):
+            ag.update()
 
-    data = pd.DataFrame(ag.history)
-    os.makedirs("../data", exist_ok=True)
-    data.to_csv("../data/out.csv")
+        data[0, i, :, :] = torch.tensor(ag.history["vel"])
+        data[1, i, :, :] = torch.tensor(ag.history["pos"])
+    torch.save(data, filename)
 
+def load_dataset(filename):
+    pass
 
 if __name__ == '__main__':
-    simulate()
+    generate_trajectories(2, 10)
