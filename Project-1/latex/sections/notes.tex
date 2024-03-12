@@ -1,0 +1,74 @@
+%================================================================
+\section{Project plan}\label{sec:project_plan}
+%================================================================
+\begin{enumerate}
+    \item Set up vanilla RNN using pytorch
+    \item Find theoretical background: articles ++
+    \item Decide on arena setup and find experimental data supporting it
+    \item Generate synthetic data
+    \item Build actual model
+\end{enumerate}
+
+\section{Protocol}\label{sec:protocol}
+\begin{description}
+    \item[29.02.24] Decided on main article to base the project on \cite{sorscher:2023:unified_theory} with support from \cite{banino:2018:vector_based}. Set up a conda environment for the project, which included \verb|PyTorch| and \verb|RatInABox| \cite{george:2022:ratinabox}. Produced a test trajectory, found out how to export the velocity and position data and convert to tensor. Started the implementation of vanilla RNN class.
+    
+    To do:
+    \begin{enumerate}
+        \item Read the chapter on RNN in GBC.
+        \item Need to figure out how to generate multiple trajectories and build a multi-dimensional tensor.
+        \item Also, how to take the velocity data as input in batches of sequences. 
+    \end{enumerate}
+
+    \item[01.03.24] Went over a general setup of RNNs using \verb|PyTorch|, and set up a vanilla RNN. Howerver, I'm having issues with the dimensions of the data and the layers so it is not working. Read chapter 10.1-10.6 and 10.12 in GBC \cite{gbc:2016:deep_learning} about RNNs.
+
+    To do:
+    \begin{enumerate}
+        \item Read chapter 10.7-10.11 in GBC.
+        \item Still, figure out how to generate multiple trajectories and which format to save in.
+        \item Also, how to take the velocity data as input sequences with correct dimensions of input and layers.
+        \item Is it necessary to build a multi-dimensional tensor and use embedding?
+    \end{enumerate}
+
+    \item[04.03.24] Read chapter 10.7-10.11 in GBC, the mathematical basis for RNNs is relevant in understanding how it is built using module in PyTorch. Read the paper from Xu et. al. \cite{xu:2022:conformal}, where they study conformal isometry in a model based on a continuous attractor neural network. They focused on a RNN that represented the self-position linearly and the input velocity additively, they also included ReLU. Noted down equations and thoughts in Goodnotes notebook, to get a better understanding of their implementation. In addition, I went through a couple of the papers refered to, and their github repos (Gao \cite{gao:2019:learning_gridlike, gao:2021:path_integration} and Banino \cite{banino:2018:vector_based}). 
+
+    List of repos:
+    \begin{description}
+        \item[Gao]  \url{https://github.com/ruiqigao/GridCell}
+        \item[Gao] \url{https://github.com/ruiqigao/grid-cell-path}
+        \item[Xu] \url{https://github.com/DehongXu/grid-cell-rnn}
+        \item[Sorscher] \url{https://github.com/ganguli-lab/grid-pattern-formation}
+        \item[Banino] \url{https://github.com/google-deepmind/grid-cells}
+        \item[RatInABox] \url{https://github.com/RatInABox-Lab/RatInABox}
+    \end{description}
+    
+    To do:
+    \begin{enumerate}
+        \item Generate multiple trajectories using \verb|RatInABox|, and save in batches of trajectories. Look into the Sorscher implementation, as they use PyTorch (batch\_size, sequence\_length, input\_size). 
+        \item The velocity data are input sequences, figure out correct dimensions of input and if it necessary to include encoder/decoder layers.
+    \end{enumerate}
+
+    \item[06.03.24] Meeting with Markus, to go over plan for thesis. Fixed the thesis document and put in the main section titles for the neuro background. Started with the computational background. Both sections which can be used in this project, maybe in lesser detail.
+
+    To do: %
+    \begin{enumerate}
+        \item Fix code!
+    \end{enumerate}
+
+    \item[07.03.24] Wrote function for generating trajectories, and figured out how to put the position and velocity into a tensor and save to file.
+
+    To do: %
+    \begin{enumerate}
+        \item Figure out dataloader in PyTorch.
+        \item Start implementing RNN.
+    \end{enumerate}
+
+    \item[12.03.24] Wrote a draft introduction, including both an artificial and a biological perspective on neuroscience. Found relevant background on brain anatomy in the neuroscience textbook \cite{bear:2016:neuroscience}, in addition to some detailed theory in the book about learning and memory \cite{byrne:2008:learning_memory}. I have also set up a basic rnn using only a torch.rnn and a decoder. The code runs, however, it does not predict the correct path...! 
+
+    To do: %
+    \begin{enumerate}
+        \item Build a model using the Module class provided by PyTorch.
+        \item Test different parameters, optimizers etc.
+        \item Customize the environment of the agent, maybe insert rewards etc.
+    \end{enumerate}
+\end{description}
