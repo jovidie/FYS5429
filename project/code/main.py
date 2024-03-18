@@ -1,10 +1,24 @@
 import matplotlib.pyplot as plt
+import seaborn as sns
 import torch 
 import torch.nn as nn 
 from torch.utils.data import TensorDataset, DataLoader
 
 from model import VanillaRNN
 from create_data import generate_trajectories
+
+sns.set_theme()
+params = {
+    "font.family": "Serif",
+    "font.serif": "Roman", 
+    "text.usetex": True,
+    "axes.titlesize": "large",
+    "axes.labelsize": "large",
+    "xtick.labelsize": "large",
+    "ytick.labelsize": "large",
+    "legend.fontsize": "medium"
+}
+plt.rcParams.update(params)
 
 
 def main():
@@ -13,8 +27,8 @@ def main():
     input_size = 2
     hidden_size = 10
     output_size = 2
-    batch_size = 10
-    seq_length = 10
+    batch_size = 5
+    seq_length = 20
 
     rnn = VanillaRNN(input_size, hidden_size, output_size, seq_length, batch_size)
     loss_f = nn.MSELoss(reduction="mean")
@@ -41,13 +55,16 @@ def main():
     pred_traj = y_tilde.detach().numpy()
     true_traj = y_batch.detach().numpy()
 
+    colors = sns.color_palette("mako", n_colors=batch_size)
     fig, ax = plt.subplots(figsize=(5, 5))
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
 
     for i in range(batch_size):
-        ax.plot(pred_traj[i, :, 0], pred_traj[i, :, 1], "--")
-        ax.plot(true_traj[i, :, 0], true_traj[i, :, 1])
+        ax.plot(pred_traj[i, :, 0], pred_traj[i, :, 1], "--", color=colors[i])
+        ax.plot(true_traj[i, :, 0], true_traj[i, :, 1], color=colors[i])
     
-    plt.show()
+    fig.savefig("../latex/figures/test_model.pdf", bbox_inches="tight")
 
 if __name__ == '__main__':
     torch.manual_seed(2024)
