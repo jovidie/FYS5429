@@ -71,4 +71,22 @@
         \item Test different parameters, optimizers etc.
         \item Customize the environment of the agent, maybe insert rewards etc.
     \end{enumerate}
+
+    \item[14.03.24] Built VanillaRNN using the Module class. it runs, however, it does not initiate a hidden state before running. 
+
+    To do: %
+    \begin{enumerate}
+        \item Fix initial hidden state.
+        \item Test different parameters, optimizers etc.
+        \item Customize the environment of the agent, maybe insert rewards etc.
+    \end{enumerate}
+
+    \item[15.03.24] Fixed the initiation of the hidden state, and the model now makes similar trajectory predictions. Need to shift the label (position) array one time step when computing loss and comparing paths.
+
+    To do: %
+    \begin{enumerate}
+        \item Account for the difference in time, since the predicted position is one time step ahead of the label.
+        \item Test different parameters, optimizers etc. to see if it is possible to decrease loss. 
+        \item Customize the environment of the agent, could be interesting to insert objects and see it the agent can learn how to navigate the environment and recognize objects after retention.
+    \end{enumerate}
 \end{description}
