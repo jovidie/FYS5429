@@ -2,20 +2,17 @@ import ratinabox
 from ratinabox.Environment import Environment
 from ratinabox.Agent import Agent
 
-import pandas as pd 
-import numpy as np
-
 import torch 
-import torch.nn as nn 
+from torch.utils.data import TensorDataset, DataLoader
 
 path = "../latex/figures/"
 ratinabox.stylize_plots()
 ratinabox.autosave_plots = False
 ratinabox.figure_directory = path 
 
-def generate_trajectories(batch_size, seq_length):
-    filename = "../data/tensor.pt"
-    data = torch.zeros([2, batch_size, seq_length, 2], dtype=torch.float32)
+def generate_trajectories(batch_size, seq_length, save=False):
+    x = torch.zeros([batch_size, seq_length, 2], dtype=torch.float32)
+    y = torch.zeros([batch_size, seq_length, 2], dtype=torch.float32)
     for i in range(batch_size):
         env = Environment()
         ag = Agent(env)
@@ -23,12 +20,26 @@ def generate_trajectories(batch_size, seq_length):
         for _ in range(seq_length):
             ag.update()
 
-        data[0, i, :, :] = torch.tensor(ag.history["vel"])
-        data[1, i, :, :] = torch.tensor(ag.history["pos"])
-    torch.save(data, filename)
+        x[i, :, :] = torch.tensor(ag.history["vel"])
+        y[i, :, :] = torch.tensor(ag.history["pos"])
 
-def load_dataset(filename):
-    pass
+    joint_data = TensorDataset(x, y)
+    if save:
+        filename = f"../data/trajectories_{batch_size}.pt"
+        torch.save(joint_data, f=filename)
+    else:
+        return joint_data
+
 
 if __name__ == '__main__':
-    generate_trajectories(2, 10)
+    joint_data = generate_trajectories(2, 10, save=False)
+    data_loader = DataLoader(dataset=joint_data, batch_size=2, shuffle=True)
+
+
+
+
+
+
+
+
+
