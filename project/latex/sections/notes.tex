@@ -1,15 +1,6 @@
 %================================================================
-\section{Project plan}\label{sec:project_plan}
-%================================================================
-\begin{enumerate}
-    \item Set up vanilla RNN using pytorch
-    \item Find theoretical background: articles ++
-    \item Decide on arena setup and find experimental data supporting it
-    \item Generate synthetic data
-    \item Build actual model
-\end{enumerate}
-
 \section{Protocol}\label{sec:protocol}
+%================================================================
 \begin{description}
     \item[29.02.24] Decided on main article to base the project on \cite{sorscher:2023:unified_theory} with support from \cite{banino:2018:vector_based}. Set up a conda environment for the project, which included \verb|PyTorch| and \verb|RatInABox| \cite{george:2022:ratinabox}. Produced a test trajectory, found out how to export the velocity and position data and convert to tensor. Started the implementation of vanilla RNN class.
     
@@ -86,6 +77,15 @@
     To do: %
     \begin{enumerate}
         \item Account for the difference in time, since the predicted position is one time step ahead of the label.
+        \item Test different parameters, optimizers etc. to see if it is possible to decrease loss. 
+        \item Customize the environment of the agent, could be interesting to insert objects and see it the agent can learn how to navigate the environment and recognize objects after retention.
+    \end{enumerate}
+
+    \item[18.03.24] Cleaned up the code and put it into scripts, fixed the time step difference when computing loss. Also added a plot showing the current model predictions for 5 trajectories. Fixed report setup, still needs proofreading and some more details in both the introduction and the progress report.
+
+    To do: %
+    \begin{enumerate}
+        \item Finish report!
         \item Test different parameters, optimizers etc. to see if it is possible to decrease loss. 
         \item Customize the environment of the agent, could be interesting to insert objects and see it the agent can learn how to navigate the environment and recognize objects after retention.
     \end{enumerate}

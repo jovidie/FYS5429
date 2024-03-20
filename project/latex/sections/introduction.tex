@@ -1,16 +1,14 @@
 %================================================================
 \section{Introduction}\label{sec:introduction}
 %================================================================
-Neural networks have found many areas of use, and its use only increases as computational resources increase. Several companies have set up farms of servers around the world to distribute the use of energy. Recently, Google announced that they are building a new data center in Skien in Norway. 
+% Neural networks have found many areas of use, and its use only increases as computational resources increase. Several companies have set up farms of servers around the world to distribute the use of energy. Recently, Google announced that they are building a new data center in Skien in Norway. 
 
-In neuroscience, it is possible to use machine learning to test many hypotheses, before continuing with the most relevant in animal models. This can speed up the time of testing while reducing the number of animal lives spent.
+In neuroscience, machine learning has become useful tool. It allows us to investigate several hypotheses, before testing the the most promising ones in animal models. This process can speed up the time of testing, while reducing the number of animal lives spent. It is, however, important to build efficient models, as energy resources are still limited. 
 
-It is however, important to build efficient models, as the energy resources are still limited. 
+One machine learning method is artificial neural network. It was inspired by the synapses in the brain, and has been found useful in neuroscience. One interesting circuit to investigate, is the entorhinal-hippocampal circuit, which is thought to be vital in navigation \cite{okeefe:1978:hippocampus, hafting:2005:microstructure}. Using biological plausible conditions, the neural network can learn how to path integrate \cite{banino:2018:vector_based}.
 
-The goal of basic research in neuroscience, is to understand how the brain works. As the brain is made up of three main parts - the cerebrum, cerebellum and brainstem. Many advances have been made, based on people suffering from injuries. Such as Phineas Gage who survived an iron rod through his skull, which damaged his frontal lobe. A change in Gage's behavior led scientists to understand the function of the frontal lobe in humans...
+The aim of this project is to train a model to learn trajectories, by taking velocity data as input. Since the trajectories are time dependent, the model has to take in sequential data, I will implement the model using a recurrent neural network.
 
-Throughout history, several psychiatric treatments have been important in understanding the human brain. However, knowing the function of the main areas of the brain, is not enough in understanding the brain as a whole. Moving down to a molecular level, we still have a lot to learn. 
+% The goal of basic research in neuroscience, is to understand how the brain works. As the brain is made up of three main parts - the cerebrum, cerebellum and brainstem. Many advances have been made, based on people suffering from injuries. Such as Phineas Gage who survived an iron rod through his skull, which damaged his frontal lobe. A change in Gage's behavior led scientists to understand the function of the frontal lobe in humans...
 
-As the artificial neural network was inspired by the synapses in the brain, it has been found useful in neuroscience. Using biological plausible conditions. One interesting circuit to investigate, is the entorhinal-hippocampal circuit. 
-
-Path integration in neural networks is a time dependent process, which can be solved using recurrent neural networks.
+% Throughout history, several psychiatric treatments have been important in understanding the human brain. However, knowing the function of the main areas of the brain, is not enough in understanding the brain as a whole. Moving down to a molecular level, we still have a lot to learn. 
