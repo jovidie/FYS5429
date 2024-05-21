@@ -159,9 +159,12 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Course material stuff
+# Course material and data
 material/
 resources/
+data/
+models/
+other/
 
 # VS Code
 FYS5429.code-workspace
