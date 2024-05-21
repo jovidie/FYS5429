@@ -1,3 +1,29 @@
-%================================================================
+%===============================================================================
 \section{Methods}\label{sec:methods}
-%================================================================
+%===============================================================================
+\subsection{Feed forward neural network}\label{sssec:ffnn}
+The artificial neural network (ANN) can be compared with the neural network of the brain. Each neuron in the ANN receives a signal which is processed and result in an output if the signal reaches a given threshold. The signal is determined by the connectivity in the ANN, the threshold by the activation function, and the data processing moves in one direction making it a feed forward neural network (FFNN).
+% Rewrite to move FFNN info into the first sentence, after introducing ANN
+% Mention general architecture, including input layer, hidden layers and output layer, as well as activation function, loss function, update of weights and bias using gradient based approach.
+A general feed forward neural network consist of an input layer, a number of hidden layers, and an output layer. Each layer consist of nodes, or neurons, where values are determined by an activation function given by 
+\begin{align}
+    y = f \bigg( \sum_{i=1}^{n} w_{i} x_{i} + b_{i} \bigg) \ .
+\end{align}
+
+When training the network, it is necessary to compute the error of the prediction and have the network learn from the error. To do this it is common to use the backpropagation algorithm, which computes the gradient of 
+
+\subsection{Recurrent neural network}\label{sssec:rnn}
+When doing path integration, the next step in the trajectory will depend on the previous step. A FFNN does not account for the time dependency, introducing the recurrent neural network (RNN). The RNN is best suited for sequential data, where each element of feature have to occur in a given order. In the case of a rats path in exploring an environment (explain dead reckoning) the rat need to know where it has been to be able to get back to its original position. To set this up in a neural network, each layer will receive an input (velocity) in addition to the recurrent state from previous step.
+
+% \subsection{Generative models}\label{sssec:generative}
+
+\subsection{Tools}\label{sssec:tools}
+The RNN is implemented in \verb|Python|, using \verb|PyTorch| to build the models. The trajectory data is generated using \verb|RatInABox|. I use the library \verb|matplotlib| to produce all figures, and stylize them using \verb|seaborn|. 
+
+\subsection{Data}\label{sssec:data}
+Synthetic data, default two dimensional environment with an agent moving. Sample velocity and positions of the agent, other data such as head direction etc. is possible to increase number of features.
+
+To simulate the exploratory behavior and movement of rats I generated trajectories using the package RatInABox \cite{george:2022:ratinabox}. It also allowed me to import the experimental data from Sargolini et al \cite{sargolini:2006:conjunctive} to compare with.
+
+
+

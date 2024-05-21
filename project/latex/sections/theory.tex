@@ -1,11 +1,46 @@
 %================================================================
 \section{Theory}\label{sec:theory}
 %================================================================
+% Introduction set the stage
+% Machine learning as a tool in scientific research and understanding the brain
+When we experience something new, the memory we form depend on the elements what, when, and where. An episodic memory links all these elements into one event, like your first time riding a bicycle. You can likely recall the color of your bike, what season it was, and the street you rode in. Especially if you fell of the bike and hit yourself, which would have resulted in an emotional link to the memory.
 
-\subsection{Biological background}\label{ssec:biological_background}
+The hippocampus is important in forming new episodic memories. This was discovered when the patient known as H.M. had both hippocampi surgically removed to stop the seizures, and was not able to form any new memories \cite{scoville:1957:loss_recent}. In studies done with rats, hippocampal lesions\footnote{Lesion information} resulted in poor performance in navigation tasks \cite{kaada:1961:maze, schlesiger:2013:hippocampal_activation_maze}. 
+
+How is the hippocampus important in spatial memory? Positional information is seen in so-called place cells, from recordings in rats. These neurons are thought to encode a spatial map of the environment \cite{okeefe:1978:hippocampus}. The hippocampus receives input from the association cortex, which is where the entorhinal cortex lies. The activity recorded in the entorhinal cortex form similar pattern as seen in place cells. However, the pattern is repetitive and the size differs between layers, forming grid patterns \cite{hafting:2005:microstructure}. These neurons are called grid cells. In addition, neurons encoding the direction of the rats head...
+
+When the rat performs a task such as running on a track, recording neuron activity in the hippocampus result in place fields. These can be ordered according to the rats position when the neuron fired, which result in a sequence of active neurons depending on time.
+
+Recent studies have applied machine learning methods, to understand the connection between grid cells and place cells in navigation \cite{banino:2018:vector_based}. The use of deep neural networks in neuroscience, have made it possible to test hypotheses using biologically plausible conditions. 
+
+\subsection{Neurobiology}\label{ssec:neurobiology}
+\textbf{Draft neuro theory}
+% The entorhinal-hippocampal circuit has been found important in how mammals navigate in space. Focus on hippocampus and spatial memory in navigation, as the hippocampus receives information from all sensory modalities.
+
+% Discoveries as to how the brain works where often made when people suffering from brain injuries showed a change in behavior. One such discovery was with the patient abbreviates as H.M. who ... removed hippocampi. His declarative memory was affected, as he could not form any new memories.
+
+% In rats, bilateral removal of hippocampus resulted affected their ability to perform in maze experiments \cite{kaada:1961:maze}.
+
+% Keywords/theme
+% Hippocampus, entorhinal cortex
+% - Navigation and the mechanisms thought to be important
+% - Memory involved in remembering surroundings, including object placement
+
+\subsection{Machine learning}\label{ssec:machine_learning}
+% Draft
+
+
+
+% Keywords/theme
+% Neural networks and sequential data
+% - RNN
+% - Boltzmann or Tolman-Eichenbaum machine?
+% Generating biological plausible data
+% - velocity data as input vs velocity and head direction vs velocity, head direction and border cells?
+
 % Brain structure and the hippocampus, the area thought to play a crucial part in navigation - main focus in this project.
-\subsubsection{Place cells}\label{sssec:place_cells}
-\subsubsection{Grid cells}\label{sssec:grid_cells}
-\subsubsection{Neuro mechanisms?}\label{sssec:neuro_mechanisms}
+% \subsubsection{Place cells}\label{sssec:place_cells}
+% \subsubsection{Grid cells}\label{sssec:grid_cells}
+% \subsubsection{Neuro mechanisms?}\label{sssec:neuro_mechanisms}
 
-\subsection{Artificial background}\label{ssec:artificial_background}
+
