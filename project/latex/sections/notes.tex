@@ -89,4 +89,51 @@
         \item Test different parameters, optimizers etc. to see if it is possible to decrease loss. 
         \item Customize the environment of the agent, could be interesting to insert objects and see it the agent can learn how to navigate the environment and recognize objects after retention.
     \end{enumerate}
+
+    \item[08.04.24] Finish draft of introduction, and set up the structure of the theory section using keywords. Added a few articles on theory and method related subjects into reference section.
+
+    To do: %
+    \begin{enumerate}
+        \item Fix training method, separate into forward and predict and include a separate method for training. 
+        \item Set up new model where head direction is added as input, in addition to velocity. Compare both model accuracy.
+        \item Experiment with different parameters, such as learning rate and schedulers.
+        \item Write theory section, include biological and artificial background.
+    \end{enumerate}
+
+    \item[22.04.24] Finish the vanilla RNN and implemented a separate train method, write new main method to use new training scheme.
+
+    To do: %
+    \begin{enumerate}
+        \item Set up new model where head direction is added as input, in addition to velocity. Compare both model accuracy.
+        \item Experiment with different parameters, such as learning rate and schedulers.
+        \item Start writing the report!
+    \end{enumerate}
+
+    \item[23.04.24] Adjusted some of the parameters to see if it affected the computation and prediction. When increasing number of hidden neurons the model seems more prone to gradient explosion, as the loss increase drastically. Also, tried to increase number of trajectories generated, and number of epochs.
+
+    \begin{enumerate}
+        \item Set up new model where head direction is added as input, in addition to velocity. Compare both model accuracy.
+        \item Write up the theory section for both the biology and machine learning part. None of these sections need to be mathematically detailed, as this will be put in the methods section.
+    \end{enumerate}
+
+    \item[01.05.24] Started to write on the theory and method sections, but I'm struggling to put all the information I want to include in order. Should try to put it into a mind map to see if I can find the red thread or something.
+
+    What I want is for the introduction to set the stage, I should mention some background here to ground the project in. I also have to present the layout of the report. 
+
+    In the theory section I want to delve a bit deeper into what is presented in the introduction, such as previous experiments of rats performing spatial tasks and the importance of hippocampus in those tasks. For the machine learning part I want say something about the advantage of using computational tools in neuroscience, and some background for previous work using neural networks in the study of place cells etc.
+
+    In the method section I will present any mathematical stuff related to the machine learning stuff, in addition to algorithms. I want to start out by presenting the basic feed forward neural networks, and move on to include recurrent neural networks for the time sequence data. If time allows I want to include something generative, the methods for this I'll include if necessary. I need to include a tool section and maybe a separate section for generating data, and mention what type of setup and data I produce and maybe why?
+
+    The result section should be pretty straight forward, start with the default environment to build the model an make predictions. Tweek the model to see if I can lower the loss? Continue with comparing the model's performance on experimental data. If time allows, include objects and possibly generate trajectories based on learned location (learn short cut).
+
+    Discuss and conclude the findings, suggest any future work.
+
+    \item[21.05.24] Cleaned up the function for creating dataset and put it into a utils module, separated into subfunction to either import Sargolini data or generating synthetic trajectories. Main function control whether the data is saved or not. 
+
+    Next up:
+    \begin{enumerate}
+        \item Write function to include other features when creating dataset, such as head-direction.
+        \item Figure out the size and shape of the environment used in the Sargolini data.
+        \item Figure out the argparser and dataclass.
+    \end{enumerate}
 \end{description}

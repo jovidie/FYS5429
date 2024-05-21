@@ -1,0 +1,133 @@
+% Background
+Hippocampus important in spatial representation and memory, and self position may be stored here - how?
+Grid cells signal the change in position, and position is integrated where?
+If grid cells path integrate based on speed and direction, where is the sensory cues processed?
+% Used info from the article \cite{moser:2008:spatial_representation}
+% For path integration use Banino et al as main
+
+% Questions
+Set up a network (rnn) which path integrates based on input such as velocity, head direction etc. Move on to maze, insert objects and have the network identify these objects based on position, or even find its way out based on spatial cues?
+- How to set up network with object recognition, how is the information about the object used as input?
+- If the networks output is a position, is this position matched with information in a mazemap? 
+- Want to use visual and locomotion cues as input in navigation tasks
+
+% Aim 
+- Set up network to perform path integration based on velocity, compare performance using synthetic data and experimental data. 
+- Include other cues such as head direction and visual cues, when determining position.
+- Include objects and object recognition, consider using several networks and have path integration done by rnn then integrate with visual cues?
+- Generate path based on task of finding object?
+
+
+%==================== Abstract ===============================================
+% A quick overview of what has been done, and the most important results, 
+% consise and to the point.
+%=============================================================================
+To do!
+
+
+%==================== Introduction ===========================================
+% Motivate the reader and present overarching ideas, and background on the 
+% subject of the project. Mention what I have done and present the structure 
+% of the report, that is how it is organized.
+%=============================================================================
+The human brain is an extraordinary computer. It processes huge amounts of data during one day, which allow us to interact with and react to our surroundings. % https://www.britannica.com/science/information-theory/Physiology 
+One fascinating feature is the ability to navigate and store memories, and a region important in spatial navigation and memory is the medial temporal lobe, where the entorhinal-hippocampal circuit lies. Early research found that lesions in the hippocampal area impaired the rat's ability to navigate %(Morris, R., Garrud, P., Rawlins, J. et al. Place navigation impaired in rats with hippocampal lesions. Nature 297, 681–683 (1982). https://doi.org/10.1038/297681a0) 
+and taxi drivers who suffered stroke, damaging the hippocampus, could no longer recall trajectories \cite{maguire:2000:navigation}.
+
+Recent studies have found that information on self position is computed in upstream from the hippocampus, and that the hippocampus itself is important in memory formation.
+
+It is common to use model animals in research related to the human brain, as the ethical aspect of invasive methods make it difficult to use human as a model. In neuroscience, machine learning has become a useful tool, as it allows us to investigate several hypotheses, before testing the the most promising ones in animal models. This process can speed up the time of testing, while reducing the number of animal lives sacrificed.
+
+Episodic memory is a type of declarative memory, which includes the ability to recall previous experiences. These memories include the element of what, when and where.
+
+
+%=================================== Theory ==================================
+In the theory section I want to delve a bit deeper into what is presented in 
+the introduction, such as previous experiments of rats performing spatial 
+tasks and the importance of hippocampus in those tasks. For the machine 
+learning part I want say something about the advantage of using computational 
+tools in neuroscience, and some background for previous work using neural 
+networks in the study of place cells etc.
+\begin{itemize}
+    \item Anatomy: Hippocampus and its connected areas, in formation and recall of memory.
+    \item Function: Spatial memory formation
+    \item Methods: In vivo, including model animals and human
+    \item Alternative: How scientific discoveries were made which led to a basic understanding of the human brain, and how ethics make this way of doing research problematic. In comes machine learning!
+\end{itemize}
+%=============================================================================
+When we experience something new, the memory we form depend on the elements what, when, and where. An episodic memory links all these elements into one event, like your first time riding a bicycle. You can likely recall the color of your bike, what season it was, and the street you rode in. Especially if you fell of the bike and hit yourself, which would have resulted in an emotional link to the memory.
+
+The hippocampus is important in forming new episodic memories. This was discovered when the patient known as H.M. had both hippocampi surgically removed to stop the seizures, and was not able to form any new memories \cite{scoville:1957:loss_recent}. In studies done with rats, hippocampal lesions\footnote{Lesion information} resulted in poor performance in navigation tasks \cite{kaada:1961:maze, schlesiger:2013:hippocampal_activation_maze}. 
+
+How is the hippocampus important in spatial memory? Positional information is seen in so-called place cells, from recordings in rats. These neurons are thought to encode a spatial map of the environment \cite{okeefe:1978:hippocampus}. The hippocampus receives input from the association cortex, which is where the entorhinal cortex lies. The activity recorded in the entorhinal cortex form similar pattern as seen in place cells. However, the pattern is repetitive and the size differs between layers, forming grid patterns \cite{hafting:2005:microstructure}. These neurons are called grid cells. In addition, neurons encoding the direction of the rats head...
+
+When the rat performs a task such as running on a track, recording neuron activity in the hippocampus result in place fields. These can be ordered according to the rats position when the neuron fired, which result in a sequence of active neurons depending on time.
+
+Recent studies have applied machine learning methods, to understand the connection between grid cells and place cells in navigation \cite{banino:2018:vector_based}. The use of deep neural networks in neuroscience, have made it possible to test hypotheses using biologically plausible conditions. 
+
+% The entorhinal-hippocampal circuit has been found important in how mammals navigate in space. Focus on hippocampus and spatial memory in navigation, as the hippocampus receives information from all sensory modalities.
+
+% Discoveries as to how the brain works where often made when people suffering from brain injuries showed a change in behavior. One such discovery was with the patient abbreviates as H.M. who ... removed hippocampi. His declarative memory was affected, as he could not form any new memories.
+
+% In rats, bilateral removal of hippocampus resulted affected their ability to perform in maze experiments \cite{kaada:1961:maze}.
+
+%==================== Methods ===============================================
+% Describe the methods and algorithms used, include any formulas. Explain how 
+% everything is implemented, and possibly mention the structure of the 
+% algorithm. Add demonstrations such as tests, selected runs and validations. 
+%============================================================================
+RatInABox
+
+% ANN
+The artificial neural network (ANN) was first described by Warren McCulloch and Warren Pitts, by signal processing in the brain using an abstract approach \cite{mcculloch:1943:logical}. In recent years, neural networks have shown many use cases and have evolved into several types of networks.
+
+A general neural network consist of layers of neurons. The output of one neuron can be described as 
+\begin{equation}
+    y = f \bigg( \sum_{i=1}^{n} w_{i} x_{i} + b_{i} \bigg) = f(z),
+\end{equation}
+where $f$ is a non-linear activation function and $n$ is the number of inputs received. 
+% In matrix-vector form: h = g(W^{T} x + b)
+
+% FFNN
+In a basic neural network, the feed-forward neural network (FFNN), the information moves through the layers in one direction. The network is said to be fully connected if each neuron in a layer is connected to all neurons in the next layer. Figure ... illustrates a FFNN, with one input layer, one hidden layer, and one output layer. 
+
+
+% RNN
+When dealing with sequential data, a standard FFNN is not able to ensure the ordering of the data. To account for the dependency between the input data, we can use a recurrent neural network (RNN). The network has recurrent connections between the hidden neurons, and produce an output at every time step. In a vanilla RNN, the output from a hidden layer at time step $t$ can be written as 
+\begin{equation}
+    \mathbf{h}^{(t)} = f \bigg( \mathbf{Wh}^{(t-1)} + \mathbf{Ux}^{(t)} +  \mathbf{b} \bigg), 
+\end{equation}
+where $\mathbf{W}$ and $\mathbf{U}$ are weight matrices, $\mathbf{b}$ is a bias vector, $\mathbf{h}$ is the recurrent state vector, and $\mathbf{x}$ is the input vector.
+
+%% Activation function
+To generate output from a neuron the input is transformed using a non-linear activation function, which is determined by the nature of the data. In neuro it is common to use the ReLU function in the hidden neurons, as it emphasizes the need for an input to reach a threshold to fire.
+
+%% Loss function 
+Using MSE to determine cartesian coordinates in the output layer.
+
+%% Backpropagation
+Whe
+
+
+%% Decoding the firing using rate maps
+Since the aim is to model place cells during path integration, it is necessary to decode the firing pattern to validate the performance. 
+
+Other methods
+
+Tools
+
+
+%==================== Results and Discussion ================================
+% Present results and give a critical discussion of my work in the context of 
+% other work. Relate the work to previous studies, and make sure the results 
+% are reproducible. Include information in figure captions such that they can 
+% give the reader enough to understand the main gist of the report.
+%============================================================================
+
+
+
+%==================== Conclusions and Perspectives ==========================
+% State main findings and interpretations, as well as a perspective on what 
+% can be done in future work. Discuss any pros and cons of the methods used, 
+% and include any possible improvements.
+%============================================================================
