@@ -1,29 +1,54 @@
 %===============================================================================
 \section{Methods}\label{sec:methods}
+% Describe the methods and algorithms used, include any formulas. Explain how 
+% everything is implemented, and possibly mention the structure of the 
+% algorithm. Add demonstrations such as tests, selected runs and validations. 
 %===============================================================================
-\subsection{Feed forward neural network}\label{sssec:ffnn}
-The artificial neural network (ANN) can be compared with the neural network of the brain. Each neuron in the ANN receives a signal which is processed and result in an output if the signal reaches a given threshold. The signal is determined by the connectivity in the ANN, the threshold by the activation function, and the data processing moves in one direction making it a feed forward neural network (FFNN).
-% Rewrite to move FFNN info into the first sentence, after introducing ANN
-% Mention general architecture, including input layer, hidden layers and output layer, as well as activation function, loss function, update of weights and bias using gradient based approach.
-A general feed forward neural network consist of an input layer, a number of hidden layers, and an output layer. Each layer consist of nodes, or neurons, where values are determined by an activation function given by 
-\begin{align}
-    y = f \bigg( \sum_{i=1}^{n} w_{i} x_{i} + b_{i} \bigg) \ .
-\end{align}
+% Dataset
+\subsection{Data}\label{sssec:data}
+To generate trajectories, I used the package RatInABox \cite{george:2022:ratinabox}. This allowed me to set up a 2D environment to include an exploring agent (rat), similar to experimental studies. It also allowed me to import the experimental data from Sargolini et al \cite{sargolini:2006:conjunctive} to compare with synthetic data. The dataset included a number of trajectories of a given sequence length, of features of interest. Possible features include the agents position, velocity, head direction and head velocity, among others. 
 
-When training the network, it is necessary to compute the error of the prediction and have the network learn from the error. To do this it is common to use the backpropagation algorithm, which computes the gradient of 
-
+% Model
 \subsection{Recurrent neural network}\label{sssec:rnn}
-When doing path integration, the next step in the trajectory will depend on the previous step. A FFNN does not account for the time dependency, introducing the recurrent neural network (RNN). The RNN is best suited for sequential data, where each element of feature have to occur in a given order. In the case of a rats path in exploring an environment (explain dead reckoning) the rat need to know where it has been to be able to get back to its original position. To set this up in a neural network, each layer will receive an input (velocity) in addition to the recurrent state from previous step.
+% FFNN
+The artificial neural network (ANN) was first described by Warren McCulloch and Warren Pitts, by signal processing in the brain using an abstract approach \cite{mcculloch:1943:logical}. In recent years, neural networks have shown many use cases and have evolved into several types of networks.
 
-% \subsection{Generative models}\label{sssec:generative}
+In the feed-forward neural network (FFNN), the information moves through the layers in one direction. The network is said to be fully connected if each neuron in a layer is connected to all neurons in the next layer. The output of one neuron can be described as 
+\begin{equation}\label{eq:ffnn}
+    y = f \bigg( \sum_{i=1}^{n} w_{i} x_{i} + b_{i} \bigg) = f(z),
+\end{equation}
+where $f$ is a non-linear activation function and $n$ is the number of inputs received.
+
+% RNN
+When dealing with sequential data, a standard FFNN is not able to ensure the ordering of the data. A recurrent neural network (RNN) can account for the dependency within the input data. The network has recurrent connections between the hidden neurons, and produce an output at every time step. In a vanilla RNN, the output from a hidden layer at time step $t$ can be written as 
+\begin{equation}\label{eq:vanilla_rnn}
+    \mathbf{h}^{(t)} = f \bigg( \mathbf{Wh}^{(t-1)} + \mathbf{Ux}^{(t)} +  \mathbf{b} \bigg), 
+\end{equation}
+where $\mathbf{W}$ and $\mathbf{U}$ are weight matrices, $\mathbf{b}$ is a bias vector, $\mathbf{h}$ is the recurrent state vector, and $\mathbf{x}$ is the input vector.
+
+% Pytorch function
+\begin{equation}\label{eq:pytorch_rnn}
+    \mathbf{h}_{t} = \text{ReLU} \bigg( x_{t} W_{ih}^{T} + b_{ih} + h_{t-1}W_{hh}^{T} +  b_{hh} \bigg)
+\end{equation}
+
+%% Activation function
+To calculate the output from a neuron, the output is transformed using a non-linear activation function. I will use the ReLU function from Equation \eqref{eq:relu}, as it emphasizes a biological neuron's need for an input to reach a certain threshold in order to fire. 
+\begin{equation}\label{eq:relu}
+    \text{ReLU} 
+    \begin{cases}
+        0 \ \text{if $f < 0$} \\
+        f \ \text{if $f \geq 0$}
+    \end{cases}
+\end{equation}
+
+%% Loss function and backpropagation
+The output of the model will correspond to positional coordinates, and the mean squared error (MSE) in Equation \eqref{eq:mse} a natural choice of loss function for a regression task. To train the model, the gradient is computed and backpropagation through time...
+\begin{equation}\label{eq:mse}
+    \text{MSE} = \frac{1}{N} \sum_{i=0}^{N-1} (\mathbf{y}_{i} - \mathbf{\Tilde{y}}_{i})^{2}
+\end{equation}
+
 
 \subsection{Tools}\label{sssec:tools}
-The RNN is implemented in \verb|Python|, using \verb|PyTorch| to build the models. The trajectory data is generated using \verb|RatInABox|. I use the library \verb|matplotlib| to produce all figures, and stylize them using \verb|seaborn|. 
+The RNN is implemented in \verb|Python|, using \verb|PyTorch| to build the models. The trajectory data is generated using \verb|RatInABox|. I use the library \verb|matplotlib| to produce all figures, and stylize them using \verb|seaborn|.
 
-\subsection{Data}\label{sssec:data}
-Synthetic data, default two dimensional environment with an agent moving. Sample velocity and positions of the agent, other data such as head direction etc. is possible to increase number of features.
-
-To simulate the exploratory behavior and movement of rats I generated trajectories using the package RatInABox \cite{george:2022:ratinabox}. It also allowed me to import the experimental data from Sargolini et al \cite{sargolini:2006:conjunctive} to compare with.
-
-
-
+In order to validate the implementation, I created a unit tests to check if functions such as \verb|generate_data()| returned what I needed.

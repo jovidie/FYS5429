@@ -136,4 +136,47 @@
         \item Figure out the size and shape of the environment used in the Sargolini data.
         \item Figure out the argparser and dataclass.
     \end{enumerate}
+
+    \item[22.05.24] Cleaned up the model and implemented use of parser.
+
+    Next up:
+    \begin{enumerate}
+        \item Have a look at the generated dataset, fix the number of trajectories so that it can be more than batch size!
+        \item Implement the option to include other features when creating dataset, such as head-direction.
+        \item Figure out the size and shape of the environment used in the Sargolini data.
+    \end{enumerate}
+
+    \item[23.05.24] Fixed the function for generating synthetic data, it now creates dataset of a given number of trajectories instead of batch size. The size of the square boxes used in Sargolini are 
+    \begin{itemize}
+        \item a small square box (100 × 100 × 50 cm high; aluminium)
+        \item a large square box (150 x 150 x 50 cm high; polyethylene)
+    \end{itemize} 
+    % Today: implement model that takes in head direction, and adapt the data generator to add this as well. Maybe add some more hidden layers to the model, and split into rnn and connectivity layers?
+
+    Next up:
+    \begin{enumerate}
+        \item Figure out which of the Sargolini data is used, to determine box size.
+        \item Separate the full trajectory into smaller with the correct sequence length.
+    \end{enumerate}
+
+    \item[24.05.24] Fixed the model so that it can take in any number of inputs. The issue kind of lies in how the data is generated, and I have to fix the generator function.
+
+    \item[27.05.24] Started cleaning up the project, consider using class to create and handle the dataset. Found some info on how to do this at \url{https://medium.com/analytics-vidhya/pytorch-for-deep-learning-feed-forward-neural-network-d24f5870c18}. Order of writing the report is going to be:
+    \begin{enumerate}
+        \item Theory, including hypothesis \footnote{Hypothesis: Does the path of an animal rely on the animals previous steps (FFNN vs. RNN), is the loss affected by how many time steps are included (length of trajectory), will more input features increase the precision of the prediction(vel, head ++). Additional: can an increase in hidden layers in the network act similarly as the layers in MEC and hippocampus?}
+        
+        \item Methods, starting with the data generation. Add the equations for the models, FFNN and especially RNN, and any algo for training and assessing (backprop, optim, learning rate ++). Also add a section on testing, as well as tools used.
+        
+        \item Result and discussion, going in order of implementation (follow development of hypothesis).
+
+        \item Introduction, lay out the motivation for the project with a background in neurobiology. 
+
+        \item Conclusion, wrap it up and add a paragraph on possible future work.
+
+        \item Abstract, the condensed thingy.
+
+        \item Appendix and references, make sure everything is in order!
+    \end{enumerate}
+
+    In addition to the report, I have to make sure the code is working and looks good. Finish up by cleaning up the repo, add doc strings and unit tests, and write up the readme with instructions on how to run the code.
 \end{description}

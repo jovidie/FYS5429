@@ -40,6 +40,35 @@ It is common to use model animals in research related to the human brain, as the
 
 Episodic memory is a type of declarative memory, which includes the ability to recall previous experiences. These memories include the element of what, when and where.
 
+\textbf{Draft introduction}
+In neuroscience, machine learning has become a useful tool, as it can ie. reduce dimensionality in data \cite{Badrulhisham:2024:ml_and_ai_in_neuroscience}. It allows us to investigate several hypotheses, before testing the the most promising ones in animal models. This process can speed up the time of testing, while reducing the number of animal lives sacrificed. 
+
+One machine learning method is artificial neural network. It was inspired by the synapses in the brain, and has been found useful in neuroscience. 
+% Add more on machine learning
+One interesting circuit to investigate, is the entorhinal-hippocampal circuit, which is thought to be vital in navigation \cite{okeefe:1978:hippocampus, hafting:2005:microstructure}. Using biological plausible conditions, the neural network can learn how to path integrate \cite{banino:2018:vector_based}.
+
+The aim of this project is to train a neural network to learn trajectories, using velocity data as input. Since the trajectories are time dependent, and the model take sequential data as input, I will implement the model using a recurrent neural network. In addition, I will use increase input and use both velocity and head direction, and compare the predicted trajectories.
+
+First, I will present a theoretical background for the project in section \ref{sec:theory}. I will give a brief overview of the relevant neurobiological circuits, and artificial neural networks, before presenting the methods used in implementing the models in section \ref{sec:methods}. In section \ref{sec:results} I present the result, followed by a discussion in section \ref{sec:discussion}. Lastly, I conclude my findings in section \ref{sec:conclusion}, and include possible future research questions.
+
+% The goal of basic research in neuroscience, is to understand how the brain works. As the brain is made up of three main parts - the cerebrum, cerebellum and brainstem. Many advances have been made, based on people suffering from injuries. Such as Phineas Gage who survived an iron rod through his skull, which damaged his frontal lobe. A change in Gage's behavior led scientists to understand the function of the frontal lobe in humans...
+
+% Throughout history, several psychiatric treatments have been important in understanding the human brain. However, knowing the function of the main areas of the brain, is not enough in understanding the brain as a whole. Moving down to a molecular level, we still have a lot to learn. 
+
+% Basic research in neuroscience aims to further understand of the human brain. In knowing the baseline we can more easily understand the mechanisms affected in a diseased brain, what happens to the healthy brain when an individual gets Alzheimer disease or a stroke damages the brain tissue. 
+
+% In the hunt for answers it is common to use model organisms, and with increasing complexity of the research question it is often necessary to use mammals in order to study the behavior in both wild type and variants. However, in order to reach a point in the research where an animal experiment is both possible and necessary to further the understanding, we have to have a plausible hypothesis to test. 
+
+The human brain is an extraordinary computer. It processes huge amounts of data during one day, which allow us to interact with and react to our surroundings. % https://www.britannica.com/science/information-theory/Physiology 
+One fascinating feature is the ability to navigate and store memories, and a region important in spatial navigation and memory is the medial temporal lobe, where the entorhinal-hippocampal circuit lies. Early research found that lesions in the hippocampal area impaired the rat's ability to navigate %(Morris, R., Garrud, P., Rawlins, J. et al. Place navigation impaired in rats with hippocampal lesions. Nature 297, 681–683 (1982). https://doi.org/10.1038/297681a0) 
+and taxi drivers who suffered stroke, damaging the hippocampus, could no longer recall trajectories \cite{maguire:2000:navigation}.
+
+Recent studies have found that information on self position is computed in upstream from the hippocampus, and that the hippocampus itself is important in memory formation.
+
+It is common to use model animals in research related to the human brain, as the ethical aspect of invasive methods make it difficult to use human as a model. In neuroscience, machine learning has become a useful tool, as it allows us to investigate several hypotheses, before testing the the most promising ones in animal models. This process can speed up the time of testing, while reducing the number of animal lives sacrificed.
+
+Episodic memory is a type of declarative memory, which includes the ability to recall previous experiences. These memories include the element of what, when and where, 
+
 
 %=================================== Theory ==================================
 In the theory section I want to delve a bit deeper into what is presented in 
@@ -89,7 +118,7 @@ where $f$ is a non-linear activation function and $n$ is the number of inputs re
 % In matrix-vector form: h = g(W^{T} x + b)
 
 % FFNN
-In a basic neural network, the feed-forward neural network (FFNN), the information moves through the layers in one direction. The network is said to be fully connected if each neuron in a layer is connected to all neurons in the next layer. Figure ... illustrates a FFNN, with one input layer, one hidden layer, and one output layer. 
+In the feed-forward neural network (FFNN), the information moves through the layers in one direction. The network is said to be fully connected if each neuron in a layer is connected to all neurons in the next layer. Figure ... illustrates a FFNN, with one input layer, one hidden layer, and one output layer. 
 
 
 % RNN
@@ -112,9 +141,34 @@ Whe
 %% Decoding the firing using rate maps
 Since the aim is to model place cells during path integration, it is necessary to decode the firing pattern to validate the performance. 
 
-Other methods
+To simulate the exploratory behavior and movement of rats I generated trajectories using the package RatInABox \cite{george:2022:ratinabox}. It also allowed me to import the experimental data from Sargolini et al \cite{sargolini:2006:conjunctive} to compare with.
 
 Tools
+
+\textbf{Draft methods}
+\subsection{Feed forward neural network}\label{sssec:ffnn}
+The artificial neural network (ANN) can be compared with the neural network of the brain. Each neuron in the ANN receives a signal which is processed and result in an output if the signal reaches a given threshold. The signal is determined by the connectivity in the ANN, the threshold by the activation function, and the data processing moves in one direction making it a feed forward neural network (FFNN).
+% Rewrite to move FFNN info into the first sentence, after introducing ANN
+% Mention general architecture, including input layer, hidden layers and output layer, as well as activation function, loss function, update of weights and bias using gradient based approach.
+A general feed forward neural network consist of an input layer, a number of hidden layers, and an output layer. Each layer consist of nodes, or neurons, where values are determined by an activation function given by 
+\begin{align}
+    y = f \bigg( \sum_{i=1}^{n} w_{i} x_{i} + b_{i} \bigg) \ .
+\end{align}
+
+When training the network, it is necessary to compute the error of the prediction and have the network learn from the error. To do this it is common to use the backpropagation algorithm, which computes the gradient of 
+
+\subsection{Recurrent neural network}\label{sssec:rnn}
+When doing path integration, the next step in the trajectory will depend on the previous step. A FFNN does not account for the time dependency, introducing the recurrent neural network (RNN). The RNN is best suited for sequential data, where each element of feature have to occur in a given order. In the case of a rats path in exploring an environment (explain dead reckoning) the rat need to know where it has been to be able to get back to its original position. To set this up in a neural network, each layer will receive an input (velocity) in addition to the recurrent state from previous step.
+
+% \subsection{Generative models}\label{sssec:generative}
+
+\subsection{Tools}\label{sssec:tools}
+The RNN is implemented in \verb|Python|, using \verb|PyTorch| to build the models. The trajectory data is generated using \verb|RatInABox|. I use the library \verb|matplotlib| to produce all figures, and stylize them using \verb|seaborn|. 
+
+\subsection{Data}\label{sssec:data}
+Synthetic data, default two dimensional environment with an agent moving. Sample velocity and positions of the agent, other data such as head direction etc. is possible to increase number of features.
+
+To simulate the exploratory behavior and movement of rats I generated trajectories using the package RatInABox \cite{george:2022:ratinabox}. It also allowed me to import the experimental data from Sargolini et al \cite{sargolini:2006:conjunctive} to compare with.
 
 
 %==================== Results and Discussion ================================
