@@ -5,8 +5,9 @@ import torch
 import torch.nn as nn 
 from torch.utils.data import TensorDataset, DataLoader
 
-from model import VanillaRNN
-from create_data import generate_trajectories
+from model import BasicRNN, VanillaRNN
+from utils import synthetic_trajectories, experimental_trajectories, parse_args
+from utils import new_generator
 
 sns.set_theme()
 params = {
@@ -32,11 +33,11 @@ def test_states():
     seq_length = 20
     num_traj = 50
 
-    rnn = VanillaRNN(input_size, hidden_size, output_size, seq_length, batch_size)
+    rnn = BasicRNN(input_size, hidden_size, output_size, seq_length, batch_size)
     loss_f = nn.MSELoss(reduction="mean")
     optimizer = torch.optim.Adam(rnn.parameters(), lr=learning_rate)
 
-    joint_data = generate_trajectories(num_traj, seq_length)
+    joint_data = synthetic_trajectories(num_traj, seq_length)
     data_loader = DataLoader(joint_data, batch_size, shuffle=True)
 
     for epoch in range(num_epochs):
@@ -68,12 +69,12 @@ def draft_main():
     seq_length = 20
     num_traj = 50
 
-    rnn = VanillaRNN(input_size, hidden_size, output_size, seq_length, batch_size)
+    rnn = BasicRNN(input_size, hidden_size, output_size, seq_length, batch_size)
     loss_f = nn.MSELoss(reduction="mean")
     optimizer = torch.optim.Adam(rnn.parameters(), lr=learning_rate)
     op = torch.optim.Adagrad(rnn.parameters(), lr=learning_rate)
 
-    joint_data = generate_trajectories(num_traj, seq_length)
+    joint_data = synthetic_trajectories(num_traj, seq_length)
     data_loader = DataLoader(joint_data, batch_size, shuffle=True)
 
     for epoch in range(num_epochs):
@@ -116,13 +117,13 @@ def simple_main():
     seq_length = 20
     num_traj = 100 # How many trajectories necessary for training
 
-    rnn = VanillaRNN(input_size, hidden_size, output_size, seq_length, batch_size)
-    joint_data = generate_trajectories(num_traj, seq_length)
+    rnn = BasicRNN(input_size, hidden_size, output_size, seq_length, batch_size)
+    joint_data = synthetic_trajectories(num_traj, seq_length)
     data_loader = DataLoader(joint_data, batch_size, shuffle=True)
 
     rnn.train(learning_rate, num_epochs, data_loader, True)
 
-    unseen_data = generate_trajectories(1, seq_length)
+    unseen_data = experimental_trajectories(seq_length)
     unseen_loader = DataLoader(unseen_data, 1)
     x_true, y_true = next(iter(unseen_loader))
     # print(unseen_data.shape)
@@ -144,13 +145,74 @@ def simple_main():
 
 
 def main():
+    args = parse_args()
+    model = VanillaRNN(args)
+
+    joint_data = new_generator(args.n_trajectories, args.seq_length)
+    # joint_data = synthetic_trajectories(args.batch_size, args.seq_length)
+    data_loader = DataLoader(joint_data, args.batch_size, shuffle=True)
+
+    model.train(data_loader, True)
+
+    unseen_data = new_generator(args.batch_size, args.seq_length)
+    unseen_loader = DataLoader(unseen_data, args.batch_size)
+
+    x_true, y_true = next(iter(unseen_loader))
+    y_tilde = model.predict((x_true, y_true))
     
-    pass
+    predicted_traj = y_tilde.detach().numpy()
+    true_traj = y_true.detach().numpy()
+    
+    colors = sns.color_palette("mako", n_colors=args.batch_size)
+    fig, ax = plt.subplots(figsize=(6, 6))
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+
+    for i in range(args.batch_size):
+        ax.plot(predicted_traj[i, :, 0], predicted_traj[i, :, 1], color=colors[i])
+        ax.plot(true_traj[i, :, 0], true_traj[i, :, 1], "--", color=colors[i])
+    
+    # fig.savefig("../latex/figures/test_model.pdf", bbox_inches="tight")
+    plt.show()
+
+
+def main_head():
+    args = parse_args()
+    model = VanillaRNN(args)
+
+    joint_data = new_generator(args.n_trajectories, args.seq_length)
+    # joint_data = synthetic_trajectories(args.batch_size, args.seq_length)
+    data_loader = DataLoader(joint_data, args.batch_size, shuffle=True)
+
+    model.train(data_loader, True)
+
+    unseen_data = experimental_trajectories(args.batch_size, args.seq_length)
+    unseen_loader = DataLoader(unseen_data, args.batch_size)
+
+    x_true, y_true = next(iter(unseen_loader))
+    y_tilde = model.predict((x_true, y_true))
+    
+    predicted_traj = y_tilde.detach().numpy()
+    true_traj = y_true.detach().numpy()
+    
+    colors = sns.color_palette("mako", n_colors=args.batch_size)
+    fig, ax = plt.subplots(figsize=(6, 6))
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+
+    for i in range(args.batch_size):
+        ax.plot(predicted_traj[i, :, 0], predicted_traj[i, :, 1], color=colors[i])
+        ax.plot(true_traj[i, :, 0], true_traj[i, :, 1], "--", color=colors[i])
+    
+    # fig.savefig("../latex/figures/test_model.pdf", bbox_inches="tight")
+    plt.show()
+
+
 
 
 if __name__ == '__main__':
     torch.manual_seed(2024)
-    test_states()
+    main()
 
 
 
