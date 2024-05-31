@@ -1,3 +1,15 @@
-%================================================================
+%==================== Results and Discussion ================================
+% Present results and give a critical discussion of my work in the context of 
+% other work. Relate the work to previous studies, and make sure the results 
+% are reproducible. Include information in figure captions such that they can 
+% give the reader enough to understand the main gist of the report.
+%============================================================================
 \section{Results}\label{sec:results}
-%================================================================
+%============================================================================
+\subsection{The vanilla RNN}
+I set up a default environment of $1 \times 1$ m which included an agent, and simulated the movement of a rat exploring a novel environment. Using this setup, I generated a dataset which included the agents velocity and position. To predict the agent's position, when given the start position and velocities, I implemented a vanilla RNN. The model architecture included a linear input layer, a recurrent hidden layer, and a linear output layer. The input layer was used to encode the initial recurrent state, using the agents start position as input. The recurrent hidden layer included the ReLU activation function, without any bias.
+
+
+
+
+\subsection{Adding input features to increase precicion}

@@ -1,0 +1,50 @@
+%==================== Introduction ===========================================
+% Motivate the reader and present overarching ideas, and background on the 
+% subject of the project. Mention what I have done and present the structure 
+% of the report, that is how it is organized.
+%=============================================================================
+When we experience something new, we form an episodic memory which relies on the elements what, when, and where. This is a declarative memory and all of the elements are linked into one event, like your first time riding a bicycle. You can likely recall the color of your bike, what season it was, and the street you rode in. Especially if you fell off the bike and hit yourself, which could have resulted in an emotional link to the memory.
+
+The hippocampus is important in forming new episodic memories. This was discovered when a patient known as H.M. had both hippocampi surgically removed to stop epileptic seizures. After the surgery H.M. was not able to form any new memories, however, he was able to form procedural memories\footnote{Procedural memories consist of skills and habits.} \cite{scoville:1957:loss_recent}. In studies done with rats, hippocampal lesions\footnote{Lesion information} resulted in poor performance in navigation tasks \cite{kaada:1961:maze, schlesiger:2013:hippocampal_activation_maze}. In addition, London taxi drivers lost the ability to navigate the city after suffering from stroke damaging the hippocampus \cite{maguire:2000:navigation}.
+
+How is the hippocampus important in spatial memory? Positional information is seen in the firing of so-called place cells, from recordings done in rats. When the rat performs a task such as running on a track, recording neuron activity in the hippocampus result in place fields. These can be ordered according to the rats position when a specific neuron fired, which result in a sequence of active neurons depending on time. These neurons are thought to encode a spatial map of the environment \cite{okeefe:1978:hippocampus}. 
+
+The hippocampus receives input from the association cortex, which is where sensory modalities are processed. This is also where the entorhinal cortex lies. The activity recorded in the medial entorhinal cortex (MEC) form similar pattern as seen in place cells. However, this pattern is repetitive and the size differs within the layers of the MEC. These neurons are called grid cells as they fire in a grid-like pattern when the rat moves around in a closed environment \cite{hafting:2005:microstructure}.
+
+The use of machine learning methods in neuroscience, have made it possible to test hypotheses using biologically plausible conditions. Recent studies have applied such methods, in trying to understand the connection between place cells and grid cells in navigation \cite{banino:2018:vector_based}. 
+
+The aim of this project is to train a neural network to learn trajectories, using velocity data as input. Since a trajectory consist of sequential data, I will implement a recurrent neural network. After training the model on velocity data, I will increase the number of input features to include e.g. head direction, and compare the predicted trajectories. As a crude model of the entorhinal cortex-hippocamus circuit, I will implement a model using two hidden layers, to compare with the single layer model.
+
+First, I present the methods used in implementing the models in section \ref{sec:methods}. In section \ref{sec:results} I present my  results and a discussion on the analysis. Lastly, I conclude my findings in section \ref{sec:conclusion}, in addition to possible future research questions.
+
+
+%==================== Methods ===============================================
+% Describe the methods and algorithms used, include any formulas. Explain how 
+% everything is implemented, and possibly mention the structure of the 
+% algorithm. Add demonstrations such as tests, selected runs and validations. 
+%============================================================================
+
+% Dataset
+To generate trajectories, I used the package RatInABox \cite{george:2022:ratinabox}. This allowed me to set up a 2D environment to include an exploring agent (rat), similar to experimental studies. It also allowed me to import the experimental data from Sargolini et al \cite{sargolini:2006:conjunctive} to compare with synthetic data. The dataset included a number of trajectories of a given sequence length, of features of interest. Possible features include the agents position, velocity, head direction and head velocity, among others. 
+
+% FFNN
+The artificial neural network (ANN) was first described by Warren McCulloch and Warren Pitts, by signal processing in the brain using an abstract approach \cite{mcculloch:1943:logical}. In recent years, neural networks have shown many use cases and have evolved into several types of networks.
+
+In the feed-forward neural network (FFNN), the information moves through the layers in one direction. The network is said to be fully connected if each neuron in a layer is connected to all neurons in the next layer. The output of one neuron can be described as 
+\begin{equation}
+    y = f \bigg( \sum_{i=1}^{n} w_{i} x_{i} + b_{i} \bigg) = f(z),
+\end{equation}
+where $f$ is a non-linear activation function and $n$ is the number of inputs received.
+
+% RNN
+When dealing with sequential data, a standard FFNN is not able to ensure the ordering of the data. A recurrent neural network (RNN) can account for the dependency within the input data. The network has recurrent connections between the hidden neurons, and produce an output at every time step. In a vanilla RNN, the output from a hidden layer at time step $t$ can be written as 
+\begin{equation}
+    \mathbf{h}^{(t)} = f \bigg( \mathbf{Wh}^{(t-1)} + \mathbf{Ux}^{(t)} +  \mathbf{b} \bigg), 
+\end{equation}
+where $\mathbf{W}$ and $\mathbf{U}$ are weight matrices, $\mathbf{b}$ is a bias vector, $\mathbf{h}$ is the recurrent state vector, and $\mathbf{x}$ is the input vector.
+
+%% Activation function
+To generate output from a neuron the input is transformed using a non-linear activation function, which is determined by the nature of the data. In neuro it is common to use the ReLU function in the hidden neurons, as it emphasizes the neurons need for an input to reach a certain threshold in order to fire. 
+
+%% Loss function and backpropagation
+The output of the model will correspond to positional coordinates, which makes the mean squared error (MSE) a natural loss function. To train the model, the gradient is computed and backpropagation through time...
