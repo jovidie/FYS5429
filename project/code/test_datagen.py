@@ -1,113 +1,12 @@
-from dataclasses import dataclass
+import numpy as np
 
 import ratinabox
 from ratinabox.Environment import Environment
 from ratinabox.Agent import Agent
 
-import torch 
-from torch.nn import MSELoss
-from torch.optim import Optimizer, Adam
+import torch
+import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-import argparse
-
-path = "../latex/figures/"
-ratinabox.stylize_plots()
-ratinabox.autosave_plots = False
-ratinabox.figure_directory = path 
-
-
-def plot_theme():
-    sns.set_theme()
-    params = {
-        "font.family": "Serif",
-        "font.serif": "Roman", 
-        "text.usetex": True,
-        "axes.titlesize": "large",
-        "axes.labelsize": "large",
-        "xtick.labelsize": "large",
-        "ytick.labelsize": "large",
-        "legend.fontsize": "medium"
-    }
-    plt.rcParams.update(params)
-
-
-@dataclass
-class VanillaRNNargs:
-    n_inputs: int = 2
-    n_neurons: int = 128
-    n_outputs: int = 2
-
-    lr: float = 0.001
-    n_epochs: int = 1000
-    loss_func = MSELoss(reduction="mean")
-
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
-
-
-def parse_args():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("--n_inputs",
-                        default=2,
-                        type=int,
-                        help="Number of input features")
-    parser.add_argument("--n_neurons",
-                        default=64,
-                        type=int,
-                        help="Number of neurons in hidden layer")
-    parser.add_argument("--n_gc",
-                        default=128,
-                        type=int,
-                        help="Number of neurons in MEC hidden layer")
-    parser.add_argument("--n_pc",
-                        default=64,
-                        type=int,
-                        help="Number of neurons in CA1 hidden layer")
-    parser.add_argument("--n_layers",
-                        default=1,
-                        type=int,
-                        help="Number of hidden layers")
-    parser.add_argument("--n_outputs",
-                        default=2,
-                        type=int,
-                        help="Number of output features")
-    parser.add_argument("--lr",
-                        default=0.001,
-                        type=float,
-                        help="Learning rate, tuning parameter in gradient descent")
-    parser.add_argument("--n_epochs",
-                        default=50,
-                        type=int,
-                        help="Number of training epochs")
-    parser.add_argument("--seq_length",
-                        default=20,
-                        type=int,
-                        help="Number of time steps in the trajectory")
-    parser.add_argument("--batch_size",
-                        default=20,
-                        type=int,
-                        help="Number of trajectories per batch")
-    parser.add_argument("--n_trajectories",
-                        default=100,
-                        type=int,
-                        help="Number of trajectories to generate")
-    parser.add_argument("--device",
-                        default="cuda" if torch.cuda.is_available() else "cpu",
-                        help="Device for training model")
-    parser.add_argument("--trajectory_dir",
-                        default="../data/",
-                        help="Directory for saving dataset")
-    parser.add_argument("--model_dir",
-                        default="../models/",
-                        help="Directory for saving trained models")
-    # Include param to specify load or generate data?
-    
-    args = parser.parse_args()
-
-    return args
 
 
 def vel_data(n_trajectories, seq_length):
@@ -240,7 +139,4 @@ def load_dataset(n_trajectories, seq_length, features="vel", synthetic=True):
 
 
 if __name__ == '__main__':
-    # synthetic_dataset(10000, 20, features="vel", save=True)
-    # synthetic_dataset(100, 20, features="vel_head", save=True)
-    args = VanillaRNNargs(n_inputs=2)
-    print(args.lr)
+    synthetic_dataset(n_trajectories=100, seq_length=20, features="vel", save=True)
