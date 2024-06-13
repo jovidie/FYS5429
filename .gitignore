@@ -162,9 +162,12 @@ cython_debug/
 # Course material and data
 material/
 resources/
-data/
+trajectories/
 models/
 other/
+notebooks/
+graveyard/
+fys5429_progress_report.pdf
 
 # VS Code
 FYS5429.code-workspace
