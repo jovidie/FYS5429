@@ -41,7 +41,7 @@ or install the following requirements
 
 
 ## Run experiments
-Run all experiments from `project/code/` as
+Run all experiments from `code/` as
 ```bash
 $ python main.py
 ```
