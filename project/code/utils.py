@@ -1,22 +1,15 @@
 from dataclasses import dataclass
 
-import ratinabox
-from ratinabox.Environment import Environment
-from ratinabox.Agent import Agent
-
 import torch 
 from torch.nn import MSELoss
-from torch.optim import Optimizer, Adam
-from torch.utils.data import TensorDataset, DataLoader
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 import argparse
+import os
 
-path = "../latex/figures/"
-ratinabox.stylize_plots()
-ratinabox.autosave_plots = False
-ratinabox.figure_directory = path 
+from generate_data import generate_data
+
 
 
 def plot_theme():
@@ -40,8 +33,27 @@ class VanillaRNNargs:
     n_neurons: int = 128
     n_outputs: int = 2
 
+    seq_length: int = 20
+    batch_size: int = 20
+
     lr: float = 0.001
-    n_epochs: int = 1000
+    n_epochs: int = 10000
+    loss_func = MSELoss(reduction="mean")
+
+    device: str = "cuda" if torch.cuda.is_available() else "cpu"
+
+@dataclass
+class NeuroRNNargs:
+    n_inputs: int = 2
+    n_gc: int = 128
+    n_pc: int = 128
+    n_outputs: int = 2
+
+    seq_length: int = 20
+    batch_size: int = 20
+
+    lr: float = 0.001
+    n_epochs: int = 10000
     loss_func = MSELoss(reduction="mean")
 
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
@@ -110,137 +122,46 @@ def parse_args():
     return args
 
 
-def vel_data(n_trajectories, seq_length):
-    X = torch.zeros([n_trajectories, seq_length, 2], dtype=torch.float32)
-    y = torch.zeros([n_trajectories, seq_length, 2], dtype=torch.float32)
-
-    for i in range(n_trajectories):
-        env = Environment()
-        ag = Agent(env)
-            
-        for _ in range(seq_length):
-            ag.update()
-        
-        X[i, :, :] = torch.tensor(ag.history["vel"])
-        y[i, :, :] = torch.tensor(ag.history["pos"])
-
-    joint_data = TensorDataset(X, y)
-
-    return joint_data
-
-
-def vel_head_data(n_trajectories, seq_length):
-    X = torch.zeros([n_trajectories, seq_length, 4], dtype=torch.float32)
-    y = torch.zeros([n_trajectories, seq_length, 2], dtype=torch.float32)
-
-    for i in range(n_trajectories):
-        env = Environment()
-        ag = Agent(env)
-            
-        for _ in range(seq_length):
-            ag.update()
-        
-        X[i, :, :2] = torch.tensor(ag.history["vel"])
-        X[i, :, 2:] = torch.tensor(ag.history["head_direction"])
-        y[i, :, :] = torch.tensor(ag.history["pos"])
-
-    joint_data = TensorDataset(X, y)
-
-    return joint_data
-
-
-def vel_exp_data(n_trajectories, seq_length):
-    X = torch.zeros([n_trajectories, seq_length, 2], dtype=torch.float32)
-    y = torch.zeros([n_trajectories, seq_length, 2], dtype=torch.float32)
-
-    # Environment of Sargolini data
-    for i in range(n_trajectories):
-        env = Environment()
-        ag = Agent(env)
-        ag.import_trajectory(dataset="sargolini")
-
-        for _ in range(seq_length):
-            ag.update()
-
-        X[i, :, :] = torch.tensor(ag.history["vel"])
-        y[i, :, :] = torch.tensor(ag.history["pos"])
-
-    joint_data = TensorDataset(X, y)
-
-    return joint_data
-
-
-def vel_head_exp_data(n_trajectories, seq_length):
-    X = torch.zeros([n_trajectories, seq_length, 4], dtype=torch.float32)
-    y = torch.zeros([n_trajectories, seq_length, 2], dtype=torch.float32)
-
-    for i in range(n_trajectories):
-        env = Environment()
-        ag = Agent(env)
-        ag.import_trajectory(dataset="sargolini")
-            
-        for _ in range(seq_length):
-            ag.update()
-        
-        X[i, :, :2] = torch.tensor(ag.history["vel"])
-        X[i, :, 2:] = torch.tensor(ag.history["head_direction"])
-        y[i, :, :] = torch.tensor(ag.history["pos"])
-
-    joint_data = TensorDataset(X, y)
-
-    return joint_data
-
-
-def synthetic_dataset(n_trajectories, seq_length, features="vel", save=False):
-    try:
-        if features == "vel":
-            joint_data = vel_data(n_trajectories, seq_length)
-            filename = f"../data/synthetic/vel_{n_trajectories}_{seq_length}.pt"
-        elif features == "vel_head":
-            joint_data = vel_head_data(n_trajectories, seq_length)
-            filename = f"../data/synthetic/vel_head_{n_trajectories}_{seq_length}.pt"
-    except ValueError:
-        print(f"{features} is not a valid feature, enter vel or vel_head.")
-
-    if save:
-        torch.save(joint_data, filename)
-    else:
-        return joint_data
-    
-
-def experimental_dataset(n_trajectories, seq_length, features="vel", save=False):
-    try:
-        if features == "vel":
-            joint_data = vel_exp_data(n_trajectories, seq_length)
-            filename = f"../data/experimental/vel_{n_trajectories}_{seq_length}.pt"
-        elif features == "vel_head":
-            joint_data = vel_head_exp_data(n_trajectories, seq_length)
-            filename = f"../data/experimental/vel_head_{n_trajectories}_{seq_length}.pt"
-    except ValueError:
-        print(f"{features} is not a valid feature, enter vel or vel_head.")
-
-    if save:
-        torch.save(joint_data, filename)
-    else:
-        return joint_data
-    
-
-def load_dataset(n_trajectories, seq_length, features="vel", synthetic=True):
-    try:
-        if synthetic:
-            filename = f"../data/synthetic/{features}_{n_trajectories}_{seq_length}.pt"
+def load_data(
+        n_trajectories=100, 
+        seq_length=20, 
+        features="vel", 
+        type="features", 
+        env="square"
+):
+    data_path = "../data/trajectories/"
+    if os.path.exists(data_path):
+        if type == "features":
+            filename = f"{data_path}{features}_{n_trajectories}_{seq_length}.pt"
             joint_data = torch.load(f=filename)
-        else:
-            filename = f"../data/experimental/{features}_{n_trajectories}_{seq_length}.pt"
+
+        elif type == "env":
+            filename = f"{data_path}env_{env}_{n_trajectories}_{seq_length}.pt"
+            joint_data = torch.load(f=filename)
+
+        elif type == "experimental":
+            filename = f"{data_path}sargolini_{env}_{n_trajectories}_{seq_length}.pt"
             joint_data = torch.load(f=filename)
 
         return joint_data
-    except FileNotFoundError:
-        print("Dataset has not been generated!")
+    
+    else:
+        print("Data does not exist, generating data!")
+        os.mkdir(data_path)
+        generate_data()
 
 
-if __name__ == '__main__':
-    # synthetic_dataset(10000, 20, features="vel", save=True)
-    # synthetic_dataset(100, 20, features="vel_head", save=True)
-    args = VanillaRNNargs(n_inputs=2)
-    print(args.lr)
+def plot_trajectories(test_size, true, pred, save=False, filename=""):
+    plot_theme()
+    colors = sns.color_palette("mako", n_colors=test_size)
+    fig, ax = plt.subplots(figsize=(4, 4))
+
+    for i in range(test_size):
+        ax.plot(pred[i, 0:-1, 0], pred[i, 0:-1, 1], color=colors[i])
+        ax.plot(true[i, 1:, 0], true[i, 1:, 1], "--", color=colors[i])
+    
+    if save:
+        path = f"../latex/figures/{filename}.pdf"
+        fig.savefig(path, bbox_inches="tight")
+    else:
+        plt.show()
