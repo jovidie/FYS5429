@@ -1,0 +1,20 @@
+# User guide: https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
+name: fys5429
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python>=3.11
+  - numpy
+  - matplotlib
+  - scikit-learn
+  - seaborn
+  - tqdm
+  - pip
+
+  - pip:
+    - torch 
+    - torcheval
+    - ratinabox
